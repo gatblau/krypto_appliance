@@ -1,0 +1,12 @@
+---
+- name: Installing pre-requisite packages
+  yum:
+    name:
+      - libtool
+      - libtool-ltdl-devel
+      - perl-core
+      - zlib-devel
+      - "@Development tools"
+      - git
+    state: "{{tools_state}}"
+...

@@ -1,0 +1,59 @@
+{
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'krypto'|sudo -S sh '{{.Path}}'",
+      "scripts": [ "build/vbox_pre_config.sh" ]
+    },
+    {
+      "type": "file",
+      "source": ".",
+      "destination": "{{user `ansible_staging_directory`}}/"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "build/site.yml",
+      "inventory_file": "build/inventory.local",
+      "playbook_dir": "build",
+      "only": ["virtualbox-iso"]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'krypto'|sudo -S sh '{{.Path}}'",
+      "scripts": [ "build/vbox_post_config.sh" ]
+    }
+  ],
+  "variables": {
+    "ansible_staging_directory": "/tmp/packer-provisioner-ansible-local"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "boot_command": [ "<tab> text ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg<enter><wait>" ],
+      "boot_wait": "10s",
+      "disk_size": 40000,
+      "guest_os_type": "RedHat_64",
+      "http_directory": "build/http",
+      "iso_checksum": "13675c6f74880e7ff3481b91bdaf925ce81bda8f",
+      "iso_checksum_type": "sha1",
+      "iso_url": "http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso",
+      "ssh_username": "krypto",
+      "ssh_password": "krypt0",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo '/sbin/halt -h -p' > /tmp/shutdown.sh; echo 'krypto'|sudo -S sh '/tmp/shutdown.sh'",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "vm_name": "krypto",
+      "format": "ova",
+      "virtualbox_version_file": ".vbox_version",
+      "output_directory": "krypto-vbox",
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "4096" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "2" ],
+        [ "modifyvm", "{{.Name}}", "--vram", "64" ],
+        [ "modifyvm", "{{.Name}}", "--clipboard", "bidirectional" ],
+        [ "modifyvm", "{{.Name}}", "--draganddrop", "bidirectional" ]
+      ]
+    }
+  ]
+}

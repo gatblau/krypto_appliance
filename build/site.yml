@@ -1,0 +1,12 @@
+---
+- name: Creating Krypto Appliance
+  hosts: krypto
+  become: yes
+  remote_user: root
+  roles:
+    - { role: dev_tools, tools_state: present }
+    - install_open_ssl
+    - install_softhsm
+    - { role: dev_tools, tools_state: absent }
+    - apply_security
+...

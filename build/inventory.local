@@ -1,0 +1,4 @@
+# this ansible inventory is used to connect to the virtual machine
+# used by packer
+
+krypto ansible_connection=local

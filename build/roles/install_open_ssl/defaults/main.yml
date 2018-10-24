@@ -1,0 +1,4 @@
+---
+open_ssl_name: "openssl-1.1.1"
+open_ssl_uri: "https://www.openssl.org/source/{{open_ssl_name}}.tar.gz"
+...

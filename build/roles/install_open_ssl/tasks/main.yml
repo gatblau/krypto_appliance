@@ -1,0 +1,55 @@
+---
+- name: Downloading OpenSSL package
+  get_url:
+    url: "{{ open_ssl_uri }}"
+    dest: "/usr/local/openssl.tar.gz"
+
+- name: Unarchiving OpenSSL package on the remote machine
+  unarchive:
+    src: "/usr/local/openssl.tar.gz"
+    dest: "/usr/local"
+    remote_src: yes
+
+- name: Configuring OpenSSL
+  command: "./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib"
+  args:
+      chdir: "/usr/local/{{ open_ssl_name }}"
+
+- name: Compiling OpenSSL
+  command: "make"
+  args:
+      chdir: "/usr/local/{{ open_ssl_name }}"
+
+- name: Testing OpenSSL
+  command: "make test"
+  args:
+      chdir: "/usr/local/{{ open_ssl_name }}"
+
+- name: Installing OpenSSL
+  command: "make install"
+  args:
+      chdir: "/usr/local/{{ open_ssl_name }}"
+
+- name: Creating OpenSSL configuration directory
+  file:
+    path: "/etc/ld.so.conf.d/"
+    state: directory
+
+- name: Deploying OpenSSL configuration file
+  copy:
+      src: "openssl.conf"
+      dest: "/etc/ld.so.conf.d/{{ open_ssl_name }}.conf"
+
+- name: Reloading dynamic links
+  command: "ldconfig -v"
+
+- name: Removing previous OpenSSL version
+  file:
+    path: "/bin/openssl"
+    state: absent
+
+- name: Deploying OpenSSL environment variables file
+  copy:
+    src: "openssl.sh"
+    dest: "/etc/profile.d/openssl.sh"
+...

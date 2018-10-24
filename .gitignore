@@ -1,0 +1,5 @@
+/krypto-vbox/
+/packer_cache/
+.vagrant/
+.idea/
+packer

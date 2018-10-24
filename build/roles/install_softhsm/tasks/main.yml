@@ -1,0 +1,18 @@
+---
+- name: Downloading SoftHSM source files
+  git:
+    repo: "https://github.com/opendnssec/SoftHSMv2.git"
+    dest: "/usr/local/SoftHSMv2"
+    version: 'master'
+
+- name: "Configuring SoftHSMv2"
+  command: "{{item}}"
+  args:
+    chdir: "/usr/local/SoftHSMv2"
+  with_items:
+    - "sh ./autogen.sh"
+    - "./configure --with-crypto-backend=openssl --with-openssl=/usr/local/ssl --disable-gost --enable-shared=yes"
+    - "make"
+    - "make install"
+#    - "softhsm2-util --init-token --slot 0 --label TOKEN_1"
+...
