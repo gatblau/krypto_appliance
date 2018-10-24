@@ -16,7 +16,7 @@ chmod 0440 /etc/sudoers.d/krypto
 SCRIPT
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "openssl" #"bento/centos-7.5"
+  config.vm.box = "bento/centos-7.5"
   config.ssh.insert_key = false
   config.vm.provider "virtualbox" do |vbox|
     vbox.memory = 4096
