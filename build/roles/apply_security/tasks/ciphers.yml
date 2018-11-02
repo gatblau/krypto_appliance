@@ -2,7 +2,7 @@
 - name: Allow only 'secure' ciphers
   lineinfile:
     path: /etc/ssh/sshd_config
-    line: 'Ciphers aes128-ctr,aes192-ctr,aes256-ctr'
+    line: 'Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc'
     regexp: '^Ciphers '
   notify: restart sshd
 ...
